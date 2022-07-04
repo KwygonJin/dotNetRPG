@@ -23,8 +23,7 @@ namespace dotNetRPG.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDTO>>>> GetAsync()
         {
-            int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            return Ok(await _characterService.GetAllCharactersAsync(id));
+            return Ok(await _characterService.GetAllCharactersAsync());
         }
 
         [HttpGet("{id}")]
@@ -57,6 +56,12 @@ namespace dotNetRPG.Controllers
                 return NotFound(serviceResponse);
 
             return Ok(serviceResponse);
+        }
+
+        [HttpPost("skill")]
+        public async Task<ActionResult<ServiceResponse<GetCharacterDTO>>> AddCharacterAsync(AddCharacterSkillDTO newCharacterSkill)
+        {
+            return Ok(await _characterService.AddCharacterSkillAsync(newCharacterSkill));
         }
     }
 }
