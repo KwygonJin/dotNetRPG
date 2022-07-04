@@ -1,10 +1,13 @@
 ﻿using dotNetRPG.DTO.Character;
 using dotNetRPG.Models;
 using dotNetRPG.Services.CharacterService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace dotNetRPG.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CharacterController : ControllerBase
@@ -16,10 +19,12 @@ namespace dotNetRPG.Controllers
             _characterService = characterService;
         }
 
+        //[AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDTO>>>> GetAsync()
         {
-            return Ok(await _characterService.GetAllCharactersAsync());
+            int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            return Ok(await _characterService.GetAllCharactersAsync(id));
         }
 
         [HttpGet("{id}")]
